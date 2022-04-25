@@ -1,6 +1,19 @@
 $(document).ready(function() {
+    // global variables
     const apiKey = "da22a2bf7ee7ea47d8c047b479d0cd14";
-  
+
+    let searchFormEl = document.getElementById("searchForm");
+    let searchFieldEl = document.getElementById("searchField");
+    let todaysWeather = document.getElementById("todaysWeather");
+    let inputCity = document.getElementById("inputCity");
+    let todaysDate = document.getElementById("dates");
+    let wxSymbols = document.getElementById("wxIcon");
+    let tempEL = document.getElementById("temp");
+    let windEl = document.getElementById("wind");
+    let humidEl = document.getElementById("humid");
+    let uvEl = document.getElementById("uv");
+    let fiveDayEl = document.getElementById("fiveDay");
+    
     var options = {
         enableHighAccuracy: true,
         timeout: 5000,
