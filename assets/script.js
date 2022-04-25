@@ -6,13 +6,15 @@ $(document).ready(function() {
     let searchFieldEl = document.getElementById("searchField");
     let todaysWeather = document.getElementById("todaysWeather");
     let inputCity = document.getElementById("inputCity");
-    let todaysDate = document.getElementById("dates");
+    let todaysWx = document.getElementById("dates");
     let wxSymbols = document.getElementById("wxIcon");
     let tempEL = document.getElementById("temp");
     let windEl = document.getElementById("wind");
     let humidEl = document.getElementById("humid");
     let uvEl = document.getElementById("uv");
     let fiveDayEl = document.getElementById("fiveDay");
+
+    $("#dates")
     
     var options = {
         enableHighAccuracy: true,
@@ -50,13 +52,14 @@ $(document).ready(function() {
 
 console.log(location);
 
+// clear the 5 day to input the new cities weather the next 5 days
+let clearFiveDay = function() {
+    var clear = fiveDayEl.lastElementChild
+    while (clear) {
+        fiveDayEl.removeChild(clear);
+        clear = fiveDayEl.lastElementChild
+    }
+};
 
-
-
-
-
-
-
-
-
+searchFormEl.addEventListener("submit", userInpit, clearFiveDay);
 })
