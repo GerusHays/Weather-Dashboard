@@ -32,7 +32,7 @@ $(document).ready(function() {
     };
     // fetch the api
     var wxVariables = function(city) {
-        var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
+        let apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
 
         fetch(apiUrl)
             .then(function(response){
@@ -57,11 +57,35 @@ $(document).ready(function() {
         let wxIcon = "https://openweathermap.org/img/w/" + weather.weather[0].icon + ".png";
         console.log(wxIcon);
         $("#inputCity").text(weather.name);
-        // $("#wxIcon").icon(wxIcon);
+        // $("#wxIcon").text(wxIcon);
         $("#temp").text(weather.main.temp);
         $("#wind").text(weather.wind.speed);
         $("#humid").text(weather.main.humidity);
-    }
+
+        let lat = weather.coord.lat;
+        let long = weather.coord.lon;
+        console.log(lat, long);
+
+        let uvApiUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + long + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
+        console.log(uvApiUrl);
+        fetch(uvApiUrl)
+        .then(function(response){
+            response.json().then(function(uvIndex){
+                console.log(uvIndex);
+                $("#uv").text(uvIndex.value);
+                // https://www.epa.gov/sunsafety/uv-index-scale-0 UV index scale
+                if(uvIndex.value = 0 || uvIndex.value > 2) {
+                    $("#uv").addClass("bg-success");
+                } else if(uvIndex.value <= 2 || uvIndex.value >= 7) {
+                    $("#uv").removeClass("bg-success");
+                    $("#uv").addClass("bg-warning");
+                } else {
+                    $("#uv").removeClass("bg-warning");
+                    $("#uv").addClass("bg-danger");
+                }
+            });
+        });
+    };
 
 
 // clear the 5 day to input the new cities weather the next 5 days
