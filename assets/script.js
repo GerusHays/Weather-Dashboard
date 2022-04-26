@@ -5,7 +5,7 @@ $(document).ready(function() {
     let searchFormEl = document.getElementById("searchForm");
     let searchFieldEl = document.getElementById("searchField");
     let todaysWeather = document.getElementById("todaysWeather");
-    // let inputCity = document.getElementById("inputCity");
+    let inputCity = document.getElementById("inputCity");
     let todaysWx = document.getElementById("dates");
     let wxSymbols = document.getElementById("wxIcon");
     let tempEL = document.getElementById("temp");
@@ -53,7 +53,14 @@ $(document).ready(function() {
     };
     // receive the cities weather
     var wxConditions = function(weather, city) {
-
+        // gets the weather Icon depending on the current conditions
+        let wxIcon = "https://openweathermap.org/img/w/" + weather.weather[0].icon + ".png";
+        console.log(wxIcon);
+        $("#inputCity").text(weather.name);
+        // $("#wxIcon").icon(wxIcon);
+        $("#temp").text(weather.main.temp);
+        $("#wind").text(weather.wind.speed);
+        $("#humid").text(weather.main.humidity);
     }
 
 
