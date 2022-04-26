@@ -5,7 +5,7 @@ $(document).ready(function() {
     let searchFormEl = document.getElementById("searchForm");
     let searchFieldEl = document.getElementById("searchField");
     let todaysWeather = document.getElementById("todaysWeather");
-    let inputCity = document.getElementById("inputCity");
+    // let inputCity = document.getElementById("inputCity");
     let todaysWx = document.getElementById("dates");
     let wxSymbols = document.getElementById("wxIcon");
     let tempEL = document.getElementById("temp");
@@ -17,10 +17,11 @@ $(document).ready(function() {
     $("#dates").text(moment().format('LL'));
     // check for the users input for what city they select
     // if they dont sselect a city alert them to pick one
-    var userInpit = function() {
-        preventDefault();
+    var userInput = function(event) {
+        event.preventDefault();
 
-        var selectedCity = inputCity.value.trim();
+        var selectedCity = searchFieldEl.value.trim();
+        console.log(selectedCity);
 
         if(selectedCity) {
             wxVariables(selectedCity);
@@ -65,5 +66,5 @@ let clearFiveDay = function() {
     }
 };
 
-searchFormEl.addEventListener("submit", userInpit, clearFiveDay);
+searchFormEl.addEventListener("submit", userInput, clearFiveDay);
 })
