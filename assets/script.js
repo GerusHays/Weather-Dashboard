@@ -93,23 +93,57 @@ $(document).ready(function() {
     };
 
     let fiveDay = function(city, lat, long) {
-        let fiveDayApiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
+        console.log(city);
+        let fiveDayApiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + long + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
         fetch(fiveDayApiUrl)
         .then(function(response){
             response.json().then(function(res){
                 console.log(res);
+                clearFiveDay();
+                for(let i=0; i < res.list.length; i++) {
+                    let list = res.list[i];
+                    let time = list.dt;
+                    let timeOffset = res.city.timezone;
+                    let timeOffsetHours = timeOffset/60/60;
+                    let timeMoment = moment.unix(time).utc().utcOffset(timeOffsetHours);
 
-                let daily = res.daily 
-                console.log(daily);
+                    if(timeMoment.format('HH:mm') >= "11:00" && timeMoment.format('HH:mm') <= "13:00") {
+                        console.log(list.weather);
 
-                for(let i=0; i < 4; i++) {
-                    // let 
-                    // let unixCoversion = moment.unix();
+                        let cardEl = document.createElement("div");
+                        cardEl.classList = "card bg-info col-2";
+
+                        let dateEl = document.createElement("h4");
+                        dateEl.classList = "card-header text-light";
+                        dateEl.textContent = timeMoment.format("MM/DD");
+
+                        let fiveDayIcon = document.createElement("img");
+                        icons = "https://openweathermap.org/img/w/" + list.weather[0].icon + ".png";
+                        $(fiveDayIcon).attr("src", icons);
+                        
+                        let temp = document.createElement("p");
+                        temp.classList = "fs-3 text-light";
+                        temp.textContent = "Temp: " + list.main.temp + "°F";
+
+                        let wind = document.createElement("p");
+                        wind.classList = "fs-3 text-light";
+                        wind.textContent = "Wind: " + list.wind.speed + "MPH";
+
+                        let humid = document.createElement("p");
+                        humid.classList = "fs-3 text-light";
+                        humid.textContent = "Humidity: " + list.main.humidity + "%";
+
+                        fiveDayEl.appendChild(cardEl);
+                        cardEl.appendChild(dateEl);
+                        cardEl.append(fiveDayIcon);
+                        cardEl.appendChild(temp);
+                        cardEl.appendChild(wind);
+                        cardEl.appendChild(humid);
+                    }
 
                 };
-            })
-        })
-
+            });
+        });
     }
 
 
@@ -122,5 +156,5 @@ let clearFiveDay = function() {
     }
 };
 
-searchFormEl.addEventListener("submit", userInput, clearFiveDay);
+searchFormEl.addEventListener("submit", userInput);
 })
