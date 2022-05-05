@@ -21,7 +21,6 @@ $(document).ready(function() {
         event.preventDefault();
 
         var selectedCity = searchFieldEl.value.trim();
-        console.log(selectedCity);
 
         if(selectedCity) {
             wxVariables(selectedCity);
@@ -38,9 +37,7 @@ $(document).ready(function() {
             .then(function(response){
                 // api request was successful
                 if(response.ok) {
-                    console.log(response);
                     response.json().then(function(data){
-                        console.log(data);
                         wxConditions(data, city);
                     });
                 } else {
@@ -66,7 +63,6 @@ $(document).ready(function() {
         let long = weather.coord.lon;
         // fetching the uv index for the selected city
         let uvApiUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + long + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
-        console.log(uvApiUrl);
         fetch(uvApiUrl)
         .then(function(response){
             response.json().then(function(uvIndex){
