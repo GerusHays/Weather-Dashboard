@@ -55,23 +55,22 @@ $(document).ready(function() {
     let wxConditions = function(weather, city) {
         // gets the weather Icon depending on the current conditions
         let wxIcon = "https://openweathermap.org/img/w/" + weather.weather[0].icon + ".png";
-        console.log(wxIcon);
+        // using jquery to show the current weather of the user's selected city
         $("#inputCity").text(weather.name);
         $("#wxIcon").attr("src", wxIcon);
         $("#temp").text(weather.main.temp);
         $("#wind").text(weather.wind.speed);
         $("#humid").text(weather.main.humidity);
-
+        // setting lat long as variables to implement the coordinates from api call
         let lat = weather.coord.lat;
         let long = weather.coord.lon;
-        console.log(lat, long);
-
+        // fetching the uv index for the selected city
         let uvApiUrl = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + long + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
         console.log(uvApiUrl);
         fetch(uvApiUrl)
         .then(function(response){
             response.json().then(function(uvIndex){
-                console.log(uvIndex.value);
+                // using jquery to set the index value and then adding classes to change the bg color based on the variable 
                 $("#uv").text(uvIndex.value);
                 // https://www.epa.gov/sunsafety/uv-index-scale-0 UV index scale
                 if(uvIndex.value <= 2) {
@@ -89,16 +88,17 @@ $(document).ready(function() {
                 }
             });
         });
+        // calls five day function when the user selects a city so it also generates next 5 days for that city
         fiveDay(city, lat, long);
     };
-
+    // five day function and fetching the forecast
     let fiveDay = function(city, lat, long) {
-        console.log(city);
+        
         let fiveDayApiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + long + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
         fetch(fiveDayApiUrl)
         .then(function(response){
             response.json().then(function(res){
-                console.log(res);
+                // calls to clear the weather when the user inputs a new city
                 clearFiveDay();
                 for(let i=0; i < res.list.length; i++) {
                     let list = res.list[i];
@@ -106,19 +106,20 @@ $(document).ready(function() {
                     let timeOffset = res.city.timezone;
                     let timeOffsetHours = timeOffset/60/60;
                     let timeMoment = moment.unix(time).utc().utcOffset(timeOffsetHours);
-
+                    // grabbing the time of 12:00 for the forecast since it is done every 3 hours I wanted the middle of the day 
                     if(timeMoment.format('HH:mm') >= "11:00" && timeMoment.format('HH:mm') <= "13:00") {
-                        console.log(list.weather);
+                        // creating elements to put in the five day forecast 
 
                         let cardEl = document.createElement("div");
                         cardEl.classList = "card bg-info col-2";
 
                         let dateEl = document.createElement("h4");
                         dateEl.classList = "card-header text-light";
-                        dateEl.textContent = timeMoment.format("MM/DD");
+                        dateEl.textContent = timeMoment.format("MMM Do");
 
                         let fiveDayIcon = document.createElement("img");
                         icons = "https://openweathermap.org/img/w/" + list.weather[0].icon + ".png";
+                        // utilized jquery here due to not being able to figure out how to do it with let
                         $(fiveDayIcon).attr("src", icons);
                         
                         let temp = document.createElement("p");
@@ -132,7 +133,7 @@ $(document).ready(function() {
                         let humid = document.createElement("p");
                         humid.classList = "fs-3 text-light";
                         humid.textContent = "Humidity: " + list.main.humidity + "%";
-
+                        // appending it to show up where i want 
                         fiveDayEl.appendChild(cardEl);
                         cardEl.appendChild(dateEl);
                         cardEl.append(fiveDayIcon);
@@ -155,6 +156,6 @@ let clearFiveDay = function() {
         clear = fiveDayEl.lastElementChild
     }
 };
-
+// once the user searches a city it will run the function 
 searchFormEl.addEventListener("submit", userInput);
 })
