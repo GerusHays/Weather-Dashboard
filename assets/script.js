@@ -4,14 +4,6 @@ $(document).ready(function() {
 
     let searchFormEl = document.getElementById("searchForm");
     let searchFieldEl = document.getElementById("searchField");
-    let todaysWeather = document.getElementById("todaysWeather");
-    let inputCity = document.getElementById("inputCity");
-    let todaysWx = document.getElementById("dates");
-    let wxSymbols = document.getElementById("wxIcon");
-    let tempEL = document.getElementById("temp");
-    let windEl = document.getElementById("wind");
-    let humidEl = document.getElementById("humid");
-    let uvEl = document.getElementById("uv");
     let fiveDayEl = document.getElementById("fiveDay");
     let cityListEl = document.getElementById("cityList");
     
@@ -38,7 +30,7 @@ $(document).ready(function() {
         cityListEl.innerHTML = "";
         populateSearchHistory();
     };
-
+    // function to saved user input cities and add elements to be able to select them
     let populateSearchHistory = function() {
        let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
 
