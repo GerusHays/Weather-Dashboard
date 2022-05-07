@@ -13,22 +13,51 @@ $(document).ready(function() {
     let humidEl = document.getElementById("humid");
     let uvEl = document.getElementById("uv");
     let fiveDayEl = document.getElementById("fiveDay");
+    let cityListEl = document.getElementById("cityList");
+    
     // set the moment js to get the dates for the cities
     $("#dates").text(moment().format('LL'));
     // check for the users input for what city they select
     // if they dont sselect a city alert them to pick one
-    var userInput = function(event) {
+    let userInput = function(event) {
         event.preventDefault();
 
-        var selectedCity = searchFieldEl.value.trim();
-
+        let selectedCity = searchFieldEl.value.trim();
+        // used https://stackoverflow.com/questions/16083919/push-json-objects-to-array-in-localstorage
+        let cityArray = [];
+        cityArray = JSON.parse(localStorage.getItem('searchHistory')) || [];
+        
         if(selectedCity) {
+            cityArray.push(selectedCity);
+            localStorage.setItem("searchHistory", JSON.stringify(cityArray));
             wxVariables(selectedCity);
             clearFiveDay;
         } else {
             alert("You must enter a city name to receieve the Weather.");
         }
+        cityListEl.innerHTML = "";
+        populateSearchHistory();
     };
+
+    let populateSearchHistory = function() {
+       let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
+
+       searchHistory.forEach(currentCity => {
+           let savedCity = document.createElement('li');
+           let savedButton = document.createElement('button');
+           savedCity.classList = "list-group-item"
+           savedButton.classList = "btn btn-secondary btn-block col-12"
+           savedButton.textContent = currentCity;
+
+           savedButton.addEventListener("click", function() {
+               searchFieldEl.value = currentCity;
+           });
+
+           savedCity.append(savedButton);
+           cityListEl.append(savedCity);  
+       });
+    }
+    populateSearchHistory();
     // fetch the api
     let wxVariables = function(city) {
         let apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=da22a2bf7ee7ea47d8c047b479d0cd14";
@@ -142,6 +171,8 @@ $(document).ready(function() {
             });
         });
     }
+
+
 
 
 // clear the 5 day to input the new cities weather the next 5 days
